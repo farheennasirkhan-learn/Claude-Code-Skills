@@ -1,0 +1,312 @@
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide 08 — Write Instructions, Not Commandments</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Fira+Code:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+  .tw-slide {
+    --primary: #2563eb;
+    --primary-light: #60a5fa;
+    --glow: rgba(37, 99, 235, 0.15);
+    --bg: #ffffff;
+    --surface: #f8fafc;
+    --border: #e2e8f0;
+    --headline: #0f172a;
+    --body: #475569;
+    --muted: #94a3b8;
+    --weak: #b45309;
+    --weak-bg: #fffbeb;
+
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--body); line-height: 1.6; -webkit-font-smoothing: antialiased;
+    box-sizing: border-box; width: 100%; max-width: 1120px; min-height: 600px;
+    margin: 0 auto; padding: 60px 40px;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+  }
+  .tw-slide *, .tw-slide *::before, .tw-slide *::after { box-sizing: border-box; }
+
+  .tw-slide .tw-label {
+    font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--primary); margin: 0 0 12px; opacity: 0; animation: tw-fadeDown 0.8s ease 0.1s forwards;
+  }
+  .tw-slide .tw-headline {
+    font-size: 40px; font-weight: 900; letter-spacing: -0.03em; color: var(--headline);
+    line-height: 1.1; margin: 0 0 14px; opacity: 0; animation: tw-fadeDown 0.8s ease 0.25s forwards;
+  }
+  .tw-slide .tw-lead {
+    font-size: 18px; font-weight: 600; color: var(--headline); max-width: 720px; margin: 0 auto 8px;
+    opacity: 0; animation: tw-fadeDown 0.8s ease 0.38s forwards;
+  }
+  .tw-slide .tw-sub {
+    font-size: 15px; color: var(--body); max-width: 740px; margin: 0 auto 34px;
+    opacity: 0; animation: tw-fadeDown 0.8s ease 0.48s forwards;
+  }
+
+  /* ── COMPARE ── */
+  .tw-compare { width: 100%; max-width: 940px; display: flex; flex-direction: column; gap: 12px; }
+  .tw-compare-head {
+    display: grid; grid-template-columns: 1fr 48px 1fr; align-items: center; padding: 0 24px;
+    opacity: 0; animation: tw-fadeDown 0.8s ease 0.6s forwards;
+  }
+  .tw-head-cell { font-size: 12px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; text-align: left; }
+  .tw-head-cell.weak { color: var(--weak); }
+  .tw-head-cell.strong { color: var(--primary); }
+
+  .tw-row {
+    display: grid; grid-template-columns: 1fr 48px 1fr; align-items: stretch;
+    background: var(--bg); border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+    cursor: pointer; outline: none; opacity: 0; transform: translateY(18px);
+    transition: transform 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.4s ease,
+                border-color 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
+  }
+  .tw-row.r1 { animation: tw-rise 0.55s ease 0.7s forwards; }
+  .tw-row.r2 { animation: tw-rise 0.55s ease 0.85s forwards; }
+  .tw-row.r3 { animation: tw-rise 0.55s ease 1.0s forwards; }
+
+  .tw-cell { padding: 20px 22px; text-align: left; display: flex; align-items: center; transition: background 0.4s ease, color 0.4s ease; }
+  .tw-cell.weak { background: var(--weak-bg); color: var(--weak); }
+  .tw-cell.strong { color: var(--headline); }
+
+  .tw-cell.weak .tw-mono {
+    font-family: 'Fira Code', ui-monospace, monospace; font-size: 13.5px; font-weight: 500; line-height: 1.55;
+  }
+  .tw-cell.strong .tw-body-text { font-size: 15px; font-weight: 500; line-height: 1.55; }
+  .tw-trait { font-size: 15px; font-weight: 700; }
+  .tw-cell.weak .tw-trait { color: var(--weak); }
+  .tw-cell.strong .tw-trait { color: var(--primary); }
+  .tw-outcome { font-size: 14.5px; font-weight: 600; }
+  .tw-cell.weak .tw-outcome { color: var(--weak); opacity: 0.85; }
+  .tw-cell.strong .tw-outcome { color: var(--body); }
+
+  .tw-arrow { display: flex; align-items: center; justify-content: center; background: var(--surface); border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+  .tw-arrow svg { width: 20px; height: 20px; stroke: var(--muted); transition: stroke 0.4s ease, transform 0.4s ease; }
+
+  /* reasoning clause */
+  .tw-reason { transition: background 0.45s ease, color 0.45s ease, box-shadow 0.45s ease; border-radius: 5px; padding: 1px 3px; position: relative; }
+  .tw-why {
+    display: inline-block; margin-left: 8px; font-size: 9px; font-weight: 800; letter-spacing: 0.5px;
+    text-transform: uppercase; color: #fff; background: var(--primary); padding: 2px 8px; border-radius: 10px;
+    opacity: 0; transform: translateX(-4px); transition: opacity 0.4s ease, transform 0.4s ease; vertical-align: middle;
+  }
+  .tw-compare.reason-on .tw-reason { background: rgba(37,99,235,0.14); color: var(--primary); font-weight: 600; }
+  .tw-compare.reason-on .tw-why { opacity: 1; transform: translateX(0); }
+
+  /* focus / defocus */
+  .tw-compare.engaged .tw-row:not(.active) { opacity: 0.5; filter: blur(1px); }
+  .tw-row.active { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 16px 32px -14px var(--glow); }
+  .tw-row.active .tw-cell.strong { background: #f8fbff; }
+  .tw-row.active .tw-arrow svg { stroke: var(--primary); transform: translateX(3px); }
+  .tw-row.locked { box-shadow: 0 16px 32px -14px var(--glow), 0 0 0 2px var(--primary); }
+
+  /* ── CLOSING ── */
+  .tw-callout {
+    margin-top: 38px; display: inline-flex; align-items: center; gap: 11px; max-width: 800px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: #fff;
+    font-size: 16px; font-weight: 700; padding: 16px 28px; border-radius: 50px;
+    box-shadow: 0 14px 30px -8px var(--glow);
+    opacity: 0; animation: tw-popIn 0.7s cubic-bezier(0.175,0.885,0.32,1.275) 1.3s forwards;
+  }
+  .tw-callout svg { width: 19px; height: 19px; stroke: rgba(255,255,255,0.9); flex-shrink: 0; }
+
+  @keyframes tw-fadeDown { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes tw-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes tw-popIn { from { opacity: 0; transform: scale(0.92) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+  @media (max-width: 700px) {
+    .tw-slide { padding: 48px 16px; }
+    .tw-slide .tw-headline { font-size: 28px; }
+    .tw-compare-head { display: none; }
+    .tw-row, .tw-row.active { grid-template-columns: 1fr; }
+    .tw-arrow { border: none; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 6px 0; }
+    .tw-arrow svg { transform: rotate(90deg); }
+    .tw-row.active .tw-arrow svg { transform: rotate(90deg) translateX(3px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tw-slide *, .tw-slide *::before, .tw-slide *::after { animation: none !important; transition: none !important; }
+    .tw-slide [class^="tw-"], .tw-slide [class*=" tw-"] { opacity: 1 !important; transform: none !important; }
+  }
+
+
+
+
+
+
+/* ===== SLIDE NAV ===== */
+.slide-nav {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 9999;
+  font-family: 'Poppins', system-ui, sans-serif;
+}
+.slide-nav .nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #111;
+  color: #fff;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+}
+.slide-nav .nav-btn:hover {
+  background: #333;
+  transform: scale(1.06);
+}
+.slide-nav .nav-btn svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.slide-nav .nav-disabled {
+  opacity: 0.25;
+  pointer-events: none;
+}
+.slide-nav .nav-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #5f6368;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(10px);
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+</style>
+<style id="fit-css">
+/* ===== SCREEN FIT ===== */
+html{overflow-x:hidden}
+body{overflow-x:hidden}
+@media (min-width:900px) and (max-height:820px){
+  .tw-slide{padding-top:28px !important;padding-bottom:24px !important;min-height:0 !important}
+}
+</style>
+</head>
+<body>
+<div class="tw-slide">
+
+  <span class="tw-label">Building Claude Code Skills · 08</span>
+  <h1 class="tw-headline">Write Instructions, Not Commandments</h1>
+  <p class="tw-lead">The instinct is to control the model with rules. Resist it.</p>
+  <p class="tw-sub">Today's models reason well. They follow intent better than they follow a stack of all-caps MUSTs. When you explain why a step matters, the model handles cases you never wrote down.</p>
+
+  <div class="tw-compare engaged" id="compare">
+    <div class="tw-compare-head">
+      <div class="tw-head-cell weak">Weak body</div>
+      <div></div>
+      <div class="tw-head-cell strong">Strong body</div>
+    </div>
+
+    <div class="tw-row r1" tabindex="0" aria-label="Weak body versus strong body, with reasoning">
+      <div class="tw-cell weak"><span class="tw-mono">"ALWAYS use a table. NEVER use prose. ALWAYS include 6 rows."</span></div>
+      <div class="tw-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+      <div class="tw-cell strong"><span class="tw-body-text">"Use a table <span class="tw-reason">so the client can scan status in seconds; prose buries the signal.<span class="tw-why">the why</span></span>"</span></div>
+    </div>
+
+    <div class="tw-row r2 active" tabindex="0" aria-label="Rigid and brittle versus reasoned and adaptable">
+      <div class="tw-cell weak"><span class="tw-trait">Rigid and brittle</span></div>
+      <div class="tw-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+      <div class="tw-cell strong"><span class="tw-trait">Reasoned and adaptable</span></div>
+    </div>
+
+    <div class="tw-row r3" tabindex="0" aria-label="Breaks on edge cases versus generalises to new ones">
+      <div class="tw-cell weak"><span class="tw-outcome">Breaks on edge cases</span></div>
+      <div class="tw-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+      <div class="tw-cell strong"><span class="tw-outcome">Generalises to new ones</span></div>
+    </div>
+  </div>
+
+  <div class="tw-callout">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+    Use the imperative voice, but earn it with reasoning. A rule the model understands is a rule it applies well.
+  </div>
+
+</div>
+
+<script>
+  (function () {
+    var compare = document.getElementById('compare');
+    var rows = Array.prototype.slice.call(compare.querySelectorAll('.tw-row'));
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var idx = 0, autoTimer = null, idleTimer = null, locked = false;
+
+    function focusRow(i) {
+      rows.forEach(function (r, k) { r.classList.toggle('active', k === i); });
+      compare.classList.add('engaged');
+      compare.classList.toggle('reason-on', i === 0);
+      idx = i;
+    }
+    function clearFocus() {
+      if (locked) return;
+      rows.forEach(function (r) { r.classList.remove('active'); });
+      compare.classList.remove('engaged', 'reason-on');
+    }
+    function startAuto() {
+      if (reduced || locked || autoTimer) return;
+      autoTimer = setInterval(function () { if (!locked) focusRow((idx + 1) % rows.length); }, 3000);
+    }
+    function stopAuto() { clearInterval(autoTimer); autoTimer = null; }
+    function pauseThenResume() { stopAuto(); clearTimeout(idleTimer); idleTimer = setTimeout(function () { if (!locked) startAuto(); }, 5000); }
+    function toggleLock(i) {
+      if (locked && idx === i) { locked = false; rows[i].classList.remove('locked'); clearFocus(); startAuto(); }
+      else { locked = true; stopAuto(); rows.forEach(function (r) { r.classList.remove('locked'); }); focusRow(i); rows[i].classList.add('locked'); }
+    }
+
+    rows.forEach(function (row, i) {
+      row.addEventListener('mouseenter', function () { stopAuto(); clearTimeout(idleTimer); if (!locked) focusRow(i); });
+      row.addEventListener('focus', function () { stopAuto(); clearTimeout(idleTimer); if (!locked) focusRow(i); });
+      row.addEventListener('mouseleave', function () { if (!locked) { clearFocus(); pauseThenResume(); } });
+      row.addEventListener('blur', function () { if (!locked) { clearFocus(); pauseThenResume(); } });
+      row.addEventListener('click', function () { toggleLock(i); });
+      row.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleLock(i); } });
+    });
+
+    // Open on the body row so the reasoning highlight reads immediately.
+    setTimeout(function () { if (!reduced) { focusRow(0); pauseThenResume(); } else { startAuto(); } }, reduced ? 0 : 2000);
+  })();
+</script>
+
+
+
+
+<div class="fit-spacer" style="height:96px" aria-hidden="true"></div>
+<div class="slide-nav">
+  <a href="slide-08.html" class="nav-btn" title="Previous"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg></a>
+  <span class="nav-label">9 / 18</span>
+  <a href="slide-10.html" class="nav-btn" title="Next"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
+</div>
+
+<script id="fit-js">
+(function(){
+  var t=null,kids=document.body.children;
+  for(var i=0;i<kids.length;i++){var k=kids[i];
+    if(/^(SCRIPT|STYLE|LINK|NOSCRIPT)$/.test(k.tagName)||k.classList.contains('slide-nav')||k.classList.contains('fit-spacer'))continue;
+    t=k;break;}
+  if(!t)return;
+  function fit(){
+    t.style.zoom=1;
+    if(window.innerWidth<900)return;
+    var h=t.getBoundingClientRect().height,avail=window.innerHeight-118;
+    if(h<=avail)return;
+    t.style.zoom=Math.max(0.72,avail/h);
+  }
+  window.addEventListener('load',fit);
+  window.addEventListener('resize',fit);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);
+  setTimeout(fit,400);setTimeout(fit,1500);fit();
+})();
+</script>
+</body></html>

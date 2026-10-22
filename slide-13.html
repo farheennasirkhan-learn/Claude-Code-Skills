@@ -1,0 +1,304 @@
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide 12 — Common Skill-Building Mistakes</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+  .tw-slide {
+    --primary: #2563eb;
+    --primary-light: #60a5fa;
+    --glow: rgba(37, 99, 235, 0.15);
+    --bg: #ffffff;
+    --surface: #f8fafc;
+    --border: #e2e8f0;
+    --headline: #0f172a;
+    --body: #475569;
+    --muted: #94a3b8;
+    --warn: #b45309;
+    --warn-bg: #fffbeb;
+
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--body); line-height: 1.6; -webkit-font-smoothing: antialiased;
+    box-sizing: border-box; width: 100%; max-width: 1120px; min-height: 600px;
+    margin: 0 auto; padding: 52px 40px;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+  }
+  .tw-slide *, .tw-slide *::before, .tw-slide *::after { box-sizing: border-box; }
+
+  .tw-slide .tw-label {
+    font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--primary); margin: 0 0 12px; opacity: 0; animation: tw-fadeDown 0.8s ease 0.1s forwards;
+  }
+  .tw-slide .tw-headline {
+    font-size: 40px; font-weight: 900; letter-spacing: -0.03em; color: var(--headline);
+    line-height: 1.1; margin: 0 0 10px; opacity: 0; animation: tw-fadeDown 0.8s ease 0.25s forwards;
+  }
+  .tw-slide .tw-hint {
+    font-size: 13px; font-weight: 600; color: var(--muted); margin: 0 0 28px;
+    opacity: 0; animation: tw-fadeDown 0.8s ease 0.38s forwards;
+  }
+
+  /* ── TABLE ── */
+  .tw-table { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: 9px; }
+  .tw-thead {
+    display: grid; grid-template-columns: 1fr 44px 1fr; align-items: center; padding: 0 22px;
+    opacity: 0; animation: tw-fadeDown 0.8s ease 0.5s forwards;
+  }
+  .tw-th { font-size: 11px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; text-align: left; }
+  .tw-th.mistake { color: var(--warn); }
+  .tw-th.better { color: var(--primary); }
+
+  .tw-row {
+    display: grid; grid-template-columns: 1fr 44px 1fr; align-items: stretch;
+    background: var(--bg); border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+    cursor: pointer; outline: none; opacity: 0; transform: translateY(14px);
+    transition: transform 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.4s ease,
+                border-color 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
+  }
+  .tw-cell { padding: 13px 18px; text-align: left; display: flex; align-items: center; gap: 10px; transition: background 0.4s ease; }
+  .tw-cell .ic { width: 17px; height: 17px; flex-shrink: 0; }
+  .tw-cell.mistake { background: var(--warn-bg); }
+  .tw-cell.mistake .ic svg { stroke: var(--warn); }
+  .tw-cell.mistake .txt { font-size: 14px; font-weight: 600; color: var(--warn); line-height: 1.35; }
+  .tw-cell.better .ic svg { stroke: var(--primary); }
+  .tw-cell.better .txt { font-size: 14px; font-weight: 500; color: var(--headline); line-height: 1.35; }
+
+  .tw-arrow { display: flex; align-items: center; justify-content: center; background: var(--surface); border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+  .tw-arrow svg { width: 17px; height: 17px; stroke: var(--muted); transition: stroke 0.4s ease, transform 0.4s ease; }
+
+  .tw-table.engaged .tw-row:not(.active) { opacity: 0.5; filter: blur(0.8px); }
+  .tw-row.active { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 14px 26px -14px var(--glow); }
+  .tw-row.active .tw-cell.better { background: #f3f8ff; }
+  .tw-row.active .tw-cell.better .txt { color: var(--primary); font-weight: 600; }
+  .tw-row.active .tw-arrow svg { stroke: var(--primary); transform: translateX(3px); }
+  .tw-row.locked { box-shadow: 0 14px 26px -14px var(--glow), 0 0 0 2px var(--primary); }
+
+  /* ── CLOSING ── */
+  .tw-callout {
+    margin-top: 30px; display: inline-flex; align-items: center; gap: 11px; max-width: 820px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: #fff;
+    font-size: 16px; font-weight: 700; padding: 16px 28px; border-radius: 50px;
+    box-shadow: 0 14px 30px -8px var(--glow);
+    opacity: 0; animation: tw-popIn 0.7s cubic-bezier(0.175,0.885,0.32,1.275) 1.3s forwards;
+  }
+  .tw-callout svg { width: 19px; height: 19px; stroke: rgba(255,255,255,0.9); flex-shrink: 0; }
+
+  @keyframes tw-fadeDown { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes tw-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes tw-popIn { from { opacity: 0; transform: scale(0.92) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+  @media (max-width: 720px) {
+    .tw-slide { padding: 44px 16px; }
+    .tw-slide .tw-headline { font-size: 27px; }
+    .tw-thead { display: none; }
+    .tw-row, .tw-row.active { grid-template-columns: 1fr; }
+    .tw-arrow { border: none; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 4px 0; }
+    .tw-arrow svg { transform: rotate(90deg); }
+    .tw-row.active .tw-arrow svg { transform: rotate(90deg) translateX(3px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tw-slide *, .tw-slide *::before, .tw-slide *::after { animation: none !important; transition: none !important; }
+    .tw-slide [class^="tw-"], .tw-slide [class*=" tw-"] { opacity: 1 !important; transform: none !important; }
+  }
+
+
+
+
+
+
+/* ===== SLIDE NAV ===== */
+.slide-nav {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 9999;
+  font-family: 'Poppins', system-ui, sans-serif;
+}
+.slide-nav .nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #111;
+  color: #fff;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+}
+.slide-nav .nav-btn:hover {
+  background: #333;
+  transform: scale(1.06);
+}
+.slide-nav .nav-btn svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.slide-nav .nav-disabled {
+  opacity: 0.25;
+  pointer-events: none;
+}
+.slide-nav .nav-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #5f6368;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(10px);
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+</style>
+<style id="fit-css">
+/* ===== SCREEN FIT ===== */
+html{overflow-x:hidden}
+body{overflow-x:hidden}
+@media (min-width:900px) and (max-height:820px){
+  .tw-slide{padding-top:28px !important;padding-bottom:24px !important;min-height:0 !important}
+}
+</style>
+</head>
+<body>
+<div class="tw-slide">
+
+  <span class="tw-label">Building Claude Code Skills · 12</span>
+  <h1 class="tw-headline">Common Skill-Building Mistakes</h1>
+  <p class="tw-hint">Step through each pairing — the mistake and the move that fixes it.</p>
+
+  <div class="tw-table engaged" id="table">
+    <div class="tw-thead">
+      <div class="tw-th mistake">Common mistake</div>
+      <div></div>
+      <div class="tw-th better">Better move</div>
+    </div>
+
+    <div class="tw-row" tabindex="0" aria-label="Vague description. Better: say what it does and when to use it." style="animation: 0.5s ease 0.55s 1 normal forwards running tw-rise;">
+      <div class="tw-cell mistake"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><span class="txt">Vague description</span></div>
+      <div class="tw-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+      <div class="tw-cell better"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="txt">Say what it does and when to use it.</span></div>
+    </div>
+
+    <div class="tw-row" tabindex="0" aria-label="Wall of all-caps rules. Better: explain the reasoning; let the model generalise." style="animation: 0.5s ease 0.64s 1 normal forwards running tw-rise;">
+      <div class="tw-cell mistake"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><span class="txt">Wall of ALL-CAPS rules</span></div>
+      <div class="tw-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+      <div class="tw-cell better"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="txt">Explain the reasoning; let the model generalise.</span></div>
+    </div>
+
+    <div class="tw-row" tabindex="0" aria-label="Dumping everything into SKILL.md. Better: push detail into reference files; keep the body lean." style="animation: 0.5s ease 0.73s 1 normal forwards running tw-rise;">
+      <div class="tw-cell mistake"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><span class="txt">Dumping everything into SKILL.md</span></div>
+      <div class="tw-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+      <div class="tw-cell better"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="txt">Push detail into reference files; keep the body lean.</span></div>
+    </div>
+
+    <div class="tw-row" tabindex="0" aria-label="Building a skill for a one-off. Better: save skills for workflows that actually repeat." style="animation: 0.5s ease 0.82s 1 normal forwards running tw-rise;">
+      <div class="tw-cell mistake"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><span class="txt">Building a skill for a one-off</span></div>
+      <div class="tw-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+      <div class="tw-cell better"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="txt">Save skills for workflows that actually repeat.</span></div>
+    </div>
+
+    <div class="tw-row active" tabindex="0" aria-label="Hard-coding one example. Better: write for the general case, test on several." style="animation: 0.5s ease 0.91s 1 normal forwards running tw-rise;">
+      <div class="tw-cell mistake"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><span class="txt">Hard-coding one example</span></div>
+      <div class="tw-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+      <div class="tw-cell better"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="txt">Write for the general case, test on several.</span></div>
+    </div>
+
+    <div class="tw-row" tabindex="0" aria-label="Embedding secrets or absolute paths. Better: use environment variables and relative paths." style="animation: 0.5s ease 1s 1 normal forwards running tw-rise;">
+      <div class="tw-cell mistake"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span><span class="txt">Embedding secrets or absolute paths</span></div>
+      <div class="tw-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+      <div class="tw-cell better"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></span><span class="txt">Use environment variables and relative paths.</span></div>
+    </div>
+  </div>
+
+  <div class="tw-callout">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7.4-6.3-4.6L5.7 21.4 8 14 2 9.4h7.6z"></path></svg>
+    A good skill is small, clear, and trusted enough that the whole team reaches for it.
+  </div>
+
+</div>
+
+<script>
+  (function () {
+    var table = document.getElementById('table');
+    var rows = Array.prototype.slice.call(table.querySelectorAll('.tw-row'));
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var idx = 0, autoTimer = null, idleTimer = null, locked = false;
+
+    // staggered entrance
+    rows.forEach(function (r, i) { r.style.animation = 'tw-rise 0.5s ease ' + (0.55 + i * 0.09) + 's forwards'; });
+
+    function focusRow(i) {
+      rows.forEach(function (r, k) { r.classList.toggle('active', k === i); });
+      table.classList.add('engaged'); idx = i;
+    }
+    function clearFocus() {
+      if (locked) return;
+      rows.forEach(function (r) { r.classList.remove('active'); });
+      table.classList.remove('engaged');
+    }
+    function startAuto() {
+      if (reduced || locked || autoTimer) return;
+      autoTimer = setInterval(function () { if (!locked) focusRow((idx + 1) % rows.length); }, 3000);
+    }
+    function stopAuto() { clearInterval(autoTimer); autoTimer = null; }
+    function pauseThenResume() { stopAuto(); clearTimeout(idleTimer); idleTimer = setTimeout(function () { if (!locked) startAuto(); }, 5000); }
+    function toggleLock(i) {
+      if (locked && idx === i) { locked = false; rows[i].classList.remove('locked'); clearFocus(); startAuto(); }
+      else { locked = true; stopAuto(); rows.forEach(function (r) { r.classList.remove('locked'); }); focusRow(i); rows[i].classList.add('locked'); }
+    }
+
+    rows.forEach(function (row, i) {
+      row.addEventListener('mouseenter', function () { stopAuto(); clearTimeout(idleTimer); if (!locked) focusRow(i); });
+      row.addEventListener('focus', function () { stopAuto(); clearTimeout(idleTimer); if (!locked) focusRow(i); });
+      row.addEventListener('mouseleave', function () { if (!locked) { clearFocus(); pauseThenResume(); } });
+      row.addEventListener('blur', function () { if (!locked) { clearFocus(); pauseThenResume(); } });
+      row.addEventListener('click', function () { toggleLock(i); });
+      row.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleLock(i); } });
+    });
+
+    setTimeout(startAuto, reduced ? 0 : 2400);
+  })();
+</script>
+
+
+
+
+<div class="fit-spacer" style="height:96px" aria-hidden="true"></div>
+<div class="slide-nav">
+  <a href="slide-12.html" class="nav-btn" title="Previous"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg></a>
+  <span class="nav-label">13 / 18</span>
+  <a href="slide-14.html" class="nav-btn" title="Next"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
+</div>
+
+<script id="fit-js">
+(function(){
+  var t=null,kids=document.body.children;
+  for(var i=0;i<kids.length;i++){var k=kids[i];
+    if(/^(SCRIPT|STYLE|LINK|NOSCRIPT)$/.test(k.tagName)||k.classList.contains('slide-nav')||k.classList.contains('fit-spacer'))continue;
+    t=k;break;}
+  if(!t)return;
+  function fit(){
+    t.style.zoom=1;
+    if(window.innerWidth<900)return;
+    var h=t.getBoundingClientRect().height,avail=window.innerHeight-118;
+    if(h<=avail)return;
+    t.style.zoom=Math.max(0.72,avail/h);
+  }
+  window.addEventListener('load',fit);
+  window.addEventListener('resize',fit);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);
+  setTimeout(fit,400);setTimeout(fit,1500);fit();
+})();
+</script>
+</body></html>

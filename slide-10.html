@@ -1,0 +1,306 @@
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide 09 — Bundle What Repeats</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Fira+Code:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+  .tw-slide {
+    --primary: #2563eb;
+    --primary-light: #60a5fa;
+    --glow: rgba(37, 99, 235, 0.15);
+    --bg: #ffffff;
+    --surface: #f8fafc;
+    --border: #e2e8f0;
+    --headline: #0f172a;
+    --body: #475569;
+    --muted: #94a3b8;
+    --alert: #dc2626;
+    --alert-bg: #fef2f2;
+
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--body); line-height: 1.6; -webkit-font-smoothing: antialiased;
+    box-sizing: border-box; width: 100%; max-width: 1120px; min-height: 600px;
+    margin: 0 auto; padding: 60px 40px;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+  }
+  .tw-slide *, .tw-slide *::before, .tw-slide *::after { box-sizing: border-box; }
+
+  .tw-slide .tw-label {
+    font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--primary); margin: 0 0 12px; opacity: 0; animation: tw-fadeDown 0.8s ease 0.1s forwards;
+  }
+  .tw-slide .tw-headline {
+    font-size: 42px; font-weight: 900; letter-spacing: -0.03em; color: var(--headline);
+    line-height: 1.1; margin: 0 0 16px; opacity: 0; animation: tw-fadeDown 0.8s ease 0.25s forwards;
+  }
+  .tw-slide .tw-sub {
+    font-size: 17px; color: var(--body); max-width: 700px; margin: 0 auto 40px;
+    opacity: 0; animation: tw-fadeDown 0.8s ease 0.4s forwards;
+  }
+
+  /* ── CARDS ── */
+  .tw-cards { display: flex; gap: 20px; width: 100%; max-width: 960px; align-items: stretch; text-align: left; }
+  .tw-card {
+    flex: 1 1 0; min-width: 0; background: var(--bg); border: 2px solid var(--border); border-radius: 20px;
+    padding: 26px 24px; cursor: pointer; outline: none; display: flex; flex-direction: column; gap: 12px;
+    opacity: 0; transform: translateY(20px);
+    transition: transform 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.4s ease,
+                border-color 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
+  }
+  .tw-card.c1 { animation: tw-rise 0.6s ease 0.6s forwards; }
+  .tw-card.c2 { animation: tw-rise 0.6s ease 0.74s forwards; }
+  .tw-card.c3 { animation: tw-rise 0.6s ease 0.88s forwards; }
+
+  .tw-card-icon {
+    width: 50px; height: 50px; border-radius: 13px; background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.4s ease, transform 0.4s ease;
+  }
+  .tw-card-icon svg { width: 25px; height: 25px; stroke: var(--primary); transition: stroke 0.4s ease; }
+  .tw-card-name {
+    font-family: 'Fira Code', ui-monospace, monospace; font-size: 18px; font-weight: 700; color: var(--headline);
+  }
+  .tw-card-desc { font-size: 14.5px; color: var(--body); line-height: 1.5; }
+
+  .tw-cards.engaged .tw-card:not(.active) { opacity: 0.5; filter: blur(1px); transform: scale(0.98); }
+  .tw-card.active {
+    border-color: var(--primary); transform: translateY(-7px);
+    box-shadow: 0 20px 38px -16px var(--glow);
+  }
+  .tw-card.active .tw-card-icon { background: var(--primary); transform: scale(1.05) rotate(-4deg); }
+  .tw-card.active .tw-card-icon svg { stroke: #fff; }
+  .tw-card.active .tw-card-name { color: var(--primary); }
+  .tw-card.locked { box-shadow: 0 20px 38px -16px var(--glow), 0 0 0 2px var(--primary); }
+
+  /* ── SECURITY BAND (persistent) ── */
+  .tw-guard {
+    width: 100%; max-width: 960px; margin-top: 28px; text-align: left;
+    background: linear-gradient(180deg, #fafbff 0%, var(--surface) 100%);
+    border: 1px solid var(--border); border-radius: 20px; padding: 22px 26px;
+    opacity: 0; animation: tw-rise 0.6s ease 1.05s forwards;
+  }
+  .tw-guard-head { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .tw-guard-head svg { width: 20px; height: 20px; stroke: var(--primary); flex-shrink: 0; }
+  .tw-guard-head span { font-size: 13px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: var(--headline); }
+  .tw-rules { display: flex; gap: 16px; }
+  .tw-rule {
+    flex: 1 1 0; min-width: 0; display: flex; align-items: flex-start; gap: 11px;
+    background: var(--bg); border: 1px solid var(--border); border-radius: 13px; padding: 14px 16px;
+    font-size: 13.5px; color: var(--body); line-height: 1.45;
+  }
+  .tw-rule .tw-r-icon { width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .tw-rule .tw-r-icon svg { width: 16px; height: 16px; }
+  .tw-rule.path .tw-r-icon { background: #eff6ff; }
+  .tw-rule.path .tw-r-icon svg { stroke: var(--primary); }
+  .tw-rule.secret { border-color: #fecaca; }
+  .tw-rule.secret .tw-r-icon { background: var(--alert-bg); }
+  .tw-rule.secret .tw-r-icon svg { stroke: var(--alert); }
+  .tw-rule code {
+    font-family: 'Fira Code', ui-monospace, monospace; font-size: 12px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; color: var(--primary);
+  }
+  .tw-rule b { color: var(--headline); font-weight: 700; }
+  .tw-rule.secret b { color: var(--alert); }
+
+  @keyframes tw-fadeDown { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes tw-rise { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 740px) {
+    .tw-slide { padding: 48px 16px; }
+    .tw-slide .tw-headline { font-size: 30px; }
+    .tw-cards { flex-direction: column; }
+    .tw-rules { flex-direction: column; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tw-slide *, .tw-slide *::before, .tw-slide *::after { animation: none !important; transition: none !important; }
+    .tw-slide [class^="tw-"], .tw-slide [class*=" tw-"] { opacity: 1 !important; transform: none !important; }
+  }
+
+
+
+
+
+
+/* ===== SLIDE NAV ===== */
+.slide-nav {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 9999;
+  font-family: 'Poppins', system-ui, sans-serif;
+}
+.slide-nav .nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #111;
+  color: #fff;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+}
+.slide-nav .nav-btn:hover {
+  background: #333;
+  transform: scale(1.06);
+}
+.slide-nav .nav-btn svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.slide-nav .nav-disabled {
+  opacity: 0.25;
+  pointer-events: none;
+}
+.slide-nav .nav-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #5f6368;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(10px);
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+</style>
+<style id="fit-css">
+/* ===== SCREEN FIT ===== */
+html{overflow-x:hidden}
+body{overflow-x:hidden}
+@media (min-width:900px) and (max-height:820px){
+  .tw-slide{padding-top:28px !important;padding-bottom:24px !important;min-height:0 !important}
+}
+</style>
+</head>
+<body>
+<div class="tw-slide">
+
+  <span class="tw-label">Building Claude Code Skills · 09</span>
+  <h1 class="tw-headline">Bundle What Repeats</h1>
+  <p class="tw-sub">If every run of a skill rewrites the same helper script, the script belongs in the skill.</p>
+
+  <div class="tw-cards engaged" id="cards">
+
+    <div class="tw-card c1 active" tabindex="0" aria-label="scripts — deterministic, repetitive operations. Write it once; let the skill call it.">
+      <div class="tw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg></div>
+      <div class="tw-card-name">scripts/</div>
+      <div class="tw-card-desc">deterministic, repetitive operations. Write it once; let the skill call it.</div>
+    </div>
+
+    <div class="tw-card c2" tabindex="0" aria-label="references — documentation the skill loads only when relevant. Add a table of contents to long files.">
+      <div class="tw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></div>
+      <div class="tw-card-name">references/</div>
+      <div class="tw-card-desc">documentation the skill loads only when relevant. Add a table of contents to long files.</div>
+    </div>
+
+    <div class="tw-card c3" tabindex="0" aria-label="assets — templates, fonts, and files used in the final output.">
+      <div class="tw-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></div>
+      <div class="tw-card-name">assets/</div>
+      <div class="tw-card-desc">templates, fonts, and files used in the final output.</div>
+    </div>
+
+  </div>
+
+  <div class="tw-guard">
+    <div class="tw-guard-head">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+      <span>Two rules that protect you</span>
+    </div>
+    <div class="tw-rules">
+      <div class="tw-rule path">
+        <div class="tw-r-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></div>
+        <span>Use <b>relative paths</b> (<code>./scripts/helper.py</code>), never absolute or ~ paths.</span>
+      </div>
+      <div class="tw-rule secret">
+        <div class="tw-r-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div>
+        <span><b>Never embed API keys, tokens, or credentials.</b> A published skill can execute code, so a leaked secret is a real attack surface.</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  (function () {
+    var wrap = document.getElementById('cards');
+    var cards = Array.prototype.slice.call(wrap.querySelectorAll('.tw-card'));
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var idx = 0, autoTimer = null, idleTimer = null, locked = false;
+
+    function focusCard(i) {
+      cards.forEach(function (c, k) { c.classList.toggle('active', k === i); });
+      wrap.classList.add('engaged'); idx = i;
+    }
+    function clearFocus() {
+      if (locked) return;
+      cards.forEach(function (c) { c.classList.remove('active'); });
+      wrap.classList.remove('engaged');
+    }
+    function startAuto() {
+      if (reduced || locked || autoTimer) return;
+      autoTimer = setInterval(function () { if (!locked) focusCard((idx + 1) % cards.length); }, 3000);
+    }
+    function stopAuto() { clearInterval(autoTimer); autoTimer = null; }
+    function pauseThenResume() { stopAuto(); clearTimeout(idleTimer); idleTimer = setTimeout(function () { if (!locked) startAuto(); }, 5000); }
+    function toggleLock(i) {
+      if (locked && idx === i) { locked = false; cards[i].classList.remove('locked'); clearFocus(); startAuto(); }
+      else { locked = true; stopAuto(); cards.forEach(function (c) { c.classList.remove('locked'); }); focusCard(i); cards[i].classList.add('locked'); }
+    }
+
+    cards.forEach(function (card, i) {
+      card.addEventListener('mouseenter', function () { stopAuto(); clearTimeout(idleTimer); if (!locked) focusCard(i); });
+      card.addEventListener('focus', function () { stopAuto(); clearTimeout(idleTimer); if (!locked) focusCard(i); });
+      card.addEventListener('mouseleave', function () { if (!locked) { clearFocus(); pauseThenResume(); } });
+      card.addEventListener('blur', function () { if (!locked) { clearFocus(); pauseThenResume(); } });
+      card.addEventListener('click', function () { toggleLock(i); });
+      card.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleLock(i); } });
+    });
+
+    setTimeout(startAuto, reduced ? 0 : 2200);
+  })();
+</script>
+
+
+
+
+<div class="fit-spacer" style="height:96px" aria-hidden="true"></div>
+<div class="slide-nav">
+  <a href="slide-09.html" class="nav-btn" title="Previous"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg></a>
+  <span class="nav-label">10 / 18</span>
+  <a href="slide-11.html" class="nav-btn" title="Next"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
+</div>
+
+<script id="fit-js">
+(function(){
+  var t=null,kids=document.body.children;
+  for(var i=0;i<kids.length;i++){var k=kids[i];
+    if(/^(SCRIPT|STYLE|LINK|NOSCRIPT)$/.test(k.tagName)||k.classList.contains('slide-nav')||k.classList.contains('fit-spacer'))continue;
+    t=k;break;}
+  if(!t)return;
+  function fit(){
+    t.style.zoom=1;
+    if(window.innerWidth<900)return;
+    var h=t.getBoundingClientRect().height,avail=window.innerHeight-118;
+    if(h<=avail)return;
+    t.style.zoom=Math.max(0.72,avail/h);
+  }
+  window.addEventListener('load',fit);
+  window.addEventListener('resize',fit);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);
+  setTimeout(fit,400);setTimeout(fit,1500);fit();
+})();
+</script>
+</body></html>

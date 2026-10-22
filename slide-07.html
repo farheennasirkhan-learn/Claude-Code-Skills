@@ -1,0 +1,310 @@
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide 06 — Progressive Disclosure</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+  .tw-slide {
+    --primary: #2563eb;
+    --primary-light: #60a5fa;
+    --glow: rgba(37, 99, 235, 0.15);
+    --bg: #ffffff;
+    --surface: #f8fafc;
+    --border: #e2e8f0;
+    --headline: #0f172a;
+    --body: #475569;
+    --muted: #94a3b8;
+
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--body); line-height: 1.6; -webkit-font-smoothing: antialiased;
+    box-sizing: border-box; width: 100%; max-width: 1120px; min-height: 600px;
+    margin: 0 auto; padding: 64px 40px;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+  }
+  .tw-slide *, .tw-slide *::before, .tw-slide *::after { box-sizing: border-box; }
+
+  .tw-slide .tw-label {
+    font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--primary); margin: 0 0 12px; opacity: 0; animation: tw-fadeDown 0.8s ease 0.1s forwards;
+  }
+  .tw-slide .tw-headline {
+    font-size: 42px; font-weight: 900; letter-spacing: -0.03em; color: var(--headline);
+    line-height: 1.1; margin: 0 0 6px; opacity: 0; animation: tw-fadeDown 0.8s ease 0.25s forwards;
+  }
+  .tw-slide .tw-tagline {
+    font-size: 22px; font-weight: 900; letter-spacing: -0.02em; margin: 0 0 16px;
+    background: linear-gradient(to right, var(--primary), var(--primary-light));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    opacity: 0; animation: tw-fadeDown 0.8s ease 0.35s forwards;
+  }
+  .tw-slide .tw-sub {
+    font-size: 16px; color: var(--body); max-width: 660px; margin: 0 auto 40px;
+    opacity: 0; animation: tw-fadeDown 0.8s ease 0.45s forwards;
+  }
+
+  /* ── FUNNEL ── */
+  .tw-funnel { width: 100%; max-width: 860px; display: flex; flex-direction: column; align-items: center; }
+  .tw-tier {
+    position: relative; display: flex; align-items: center; gap: 18px;
+    background: var(--bg); border: 1px solid var(--border); border-radius: 16px;
+    padding: 18px 24px; cursor: pointer; outline: none; text-align: left;
+    transition: transform 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.4s ease,
+                border-color 0.4s ease, background 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
+  }
+  .tw-tier.t1 { width: 60%; opacity: 0; animation: tw-rise 0.6s ease 0.6s forwards; }
+  .tw-tier.t2 { width: 80%; opacity: 0; animation: tw-rise 0.6s ease 0.75s forwards; }
+  .tw-tier.t3 { width: 100%; opacity: 0; animation: tw-rise 0.6s ease 0.9s forwards; }
+
+  .tw-tier-num {
+    width: 40px; height: 40px; flex-shrink: 0; border-radius: 11px;
+    background: var(--surface); color: var(--muted);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 900;
+    transition: background 0.4s ease, color 0.4s ease, transform 0.4s ease;
+  }
+  .tw-tier-main { flex: 1; min-width: 0; }
+  .tw-tier-name { font-size: 17px; font-weight: 800; color: var(--headline); letter-spacing: -0.01em; }
+  .tw-tier-what { font-size: 14px; color: var(--body); line-height: 1.35; }
+  .tw-tier-when {
+    flex-shrink: 0; font-size: 11px; font-weight: 800; letter-spacing: 0.4px;
+    text-transform: uppercase; color: var(--muted); background: var(--surface);
+    border: 1px solid var(--border); padding: 7px 13px; border-radius: 20px;
+    transition: all 0.4s ease; white-space: nowrap;
+  }
+
+  .tw-chev { color: var(--border); margin: 4px 0; transition: color 0.4s ease; }
+  .tw-chev svg { width: 18px; height: 18px; }
+  .tw-chev.lit { color: var(--primary); }
+
+  /* focus / defocus */
+  .tw-funnel.engaged .tw-tier:not(.active) { opacity: 0.45; filter: blur(1px); }
+  .tw-tier.active {
+    border-color: var(--primary); background: #f6faff; transform: scale(1.02);
+    box-shadow: 0 16px 32px -14px var(--glow);
+  }
+  .tw-tier.active .tw-tier-num { background: var(--primary); color: #fff; transform: scale(1.05); }
+  .tw-tier.active .tw-tier-name { color: var(--primary); }
+  .tw-tier.active .tw-tier-when { color: var(--primary); border-color: var(--primary-light); background: #eff6ff; }
+  .tw-tier.locked { box-shadow: 0 16px 32px -14px var(--glow), 0 0 0 2px var(--primary); }
+
+  /* ── FOOTER ── */
+  .tw-note {
+    margin-top: 36px; display: inline-flex; align-items: flex-start; gap: 12px; max-width: 780px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    padding: 16px 24px; font-size: 15px; color: var(--headline); text-align: left; line-height: 1.55;
+    opacity: 0; animation: tw-popIn 0.7s cubic-bezier(0.175,0.885,0.32,1.275) 1.2s forwards;
+  }
+  .tw-note svg { width: 19px; height: 19px; stroke: var(--primary); flex-shrink: 0; margin-top: 2px; }
+  .tw-note b { color: var(--primary); font-weight: 700; }
+
+  @keyframes tw-fadeDown { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes tw-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes tw-popIn { from { opacity: 0; transform: scale(0.92) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+  @media (max-width: 680px) {
+    .tw-slide { padding: 48px 16px; }
+    .tw-slide .tw-headline { font-size: 30px; }
+    .tw-tier.t1, .tw-tier.t2, .tw-tier.t3 { width: 100%; }
+    .tw-tier { flex-wrap: wrap; }
+    .tw-tier-when { margin-left: 58px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tw-slide *, .tw-slide *::before, .tw-slide *::after { animation: none !important; transition: none !important; }
+    .tw-slide .tw-label, .tw-slide .tw-headline, .tw-slide .tw-tagline, .tw-slide .tw-sub,
+    .tw-slide .tw-tier, .tw-slide .tw-note { opacity: 1 !important; transform: none !important; }
+  }
+
+
+
+
+
+
+/* ===== SLIDE NAV ===== */
+.slide-nav {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 9999;
+  font-family: 'Poppins', system-ui, sans-serif;
+}
+.slide-nav .nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #111;
+  color: #fff;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+}
+.slide-nav .nav-btn:hover {
+  background: #333;
+  transform: scale(1.06);
+}
+.slide-nav .nav-btn svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.slide-nav .nav-disabled {
+  opacity: 0.25;
+  pointer-events: none;
+}
+.slide-nav .nav-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #5f6368;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(10px);
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+</style>
+<style id="fit-css">
+/* ===== SCREEN FIT ===== */
+html{overflow-x:hidden}
+body{overflow-x:hidden}
+@media (min-width:900px) and (max-height:820px){
+  .tw-slide{padding-top:28px !important;padding-bottom:24px !important;min-height:0 !important}
+}
+</style>
+</head>
+<body>
+<div class="tw-slide">
+
+  <span class="tw-label">Building Claude Code Skills · 06</span>
+  <h1 class="tw-headline">Progressive Disclosure</h1>
+  <div class="tw-tagline">Load Only What You Need</div>
+  <p class="tw-sub">Skills are efficient because Claude does not read everything at once. It loads in three levels.</p>
+
+  <div class="tw-funnel engaged" id="funnel">
+
+    <div class="tw-tier t1 active" tabindex="0" aria-label="Level 1, Metadata. Name and description, about 100 words. Always in context.">
+      <div class="tw-tier-num">1</div>
+      <div class="tw-tier-main">
+        <div class="tw-tier-name">Metadata</div>
+        <div class="tw-tier-what">Name and description (~100 words)</div>
+      </div>
+      <div class="tw-tier-when">Always in context</div>
+    </div>
+
+    <div class="tw-chev" data-between="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+
+    <div class="tw-tier t2" tabindex="0" aria-label="Level 2, Body. The full SKILL.md instructions. When the skill triggers.">
+      <div class="tw-tier-num">2</div>
+      <div class="tw-tier-main">
+        <div class="tw-tier-name">Body</div>
+        <div class="tw-tier-what">The full SKILL.md instructions</div>
+      </div>
+      <div class="tw-tier-when">When the skill triggers</div>
+    </div>
+
+    <div class="tw-chev" data-between="2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+
+    <div class="tw-tier t3" tabindex="0" aria-label="Level 3, Resources. Scripts, references, assets. Only as the task needs them.">
+      <div class="tw-tier-num">3</div>
+      <div class="tw-tier-main">
+        <div class="tw-tier-name">Resources</div>
+        <div class="tw-tier-what">Scripts, references, assets</div>
+      </div>
+      <div class="tw-tier-when">Only as the task needs them</div>
+    </div>
+
+  </div>
+
+  <div class="tw-note">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+    <span>This is why the description must do its job at level one, and why a bloated SKILL.md is a cost. <b>Keep the body under roughly 500 lines</b>; push detail into reference files the skill points to.</span>
+  </div>
+
+</div>
+
+<script>
+  (function () {
+    var funnel = document.getElementById('funnel');
+    var tiers = Array.prototype.slice.call(funnel.querySelectorAll('.tw-tier'));
+    var chevs = Array.prototype.slice.call(funnel.querySelectorAll('.tw-chev'));
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var idx = 0, autoTimer = null, idleTimer = null, locked = false;
+
+    function focusTier(i) {
+      tiers.forEach(function (t, k) { t.classList.toggle('active', k === i); });
+      // light chevrons up to the active tier to suggest staged loading
+      chevs.forEach(function (c) { c.classList.toggle('lit', Number(c.getAttribute('data-between')) <= i); });
+      funnel.classList.add('engaged'); idx = i;
+    }
+    function clearFocus() {
+      if (locked) return;
+      tiers.forEach(function (t) { t.classList.remove('active'); });
+      chevs.forEach(function (c) { c.classList.remove('lit'); });
+      funnel.classList.remove('engaged');
+    }
+    function startAuto() {
+      if (reduced || locked || autoTimer) return;
+      autoTimer = setInterval(function () { if (!locked) focusTier((idx + 1) % tiers.length); }, 3000);
+    }
+    function stopAuto() { clearInterval(autoTimer); autoTimer = null; }
+    function pauseThenResume() { stopAuto(); clearTimeout(idleTimer); idleTimer = setTimeout(function () { if (!locked) startAuto(); }, 5000); }
+    function toggleLock(i) {
+      if (locked && idx === i) { locked = false; tiers[i].classList.remove('locked'); clearFocus(); startAuto(); }
+      else { locked = true; stopAuto(); tiers.forEach(function (t) { t.classList.remove('locked'); }); focusTier(i); tiers[i].classList.add('locked'); }
+    }
+
+    tiers.forEach(function (tier, i) {
+      tier.addEventListener('mouseenter', function () { stopAuto(); clearTimeout(idleTimer); if (!locked) focusTier(i); });
+      tier.addEventListener('focus', function () { stopAuto(); clearTimeout(idleTimer); if (!locked) focusTier(i); });
+      tier.addEventListener('mouseleave', function () { if (!locked) { clearFocus(); pauseThenResume(); } });
+      tier.addEventListener('blur', function () { if (!locked) { clearFocus(); pauseThenResume(); } });
+      tier.addEventListener('click', function () { toggleLock(i); });
+      tier.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleLock(i); } });
+    });
+
+    setTimeout(startAuto, reduced ? 0 : 2200);
+  })();
+</script>
+
+
+
+
+<div class="fit-spacer" style="height:96px" aria-hidden="true"></div>
+<div class="slide-nav">
+  <a href="slide-06.html" class="nav-btn" title="Previous"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg></a>
+  <span class="nav-label">7 / 18</span>
+  <a href="slide-08.html" class="nav-btn" title="Next"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
+</div>
+
+<script id="fit-js">
+(function(){
+  var t=null,kids=document.body.children;
+  for(var i=0;i<kids.length;i++){var k=kids[i];
+    if(/^(SCRIPT|STYLE|LINK|NOSCRIPT)$/.test(k.tagName)||k.classList.contains('slide-nav')||k.classList.contains('fit-spacer'))continue;
+    t=k;break;}
+  if(!t)return;
+  function fit(){
+    t.style.zoom=1;
+    if(window.innerWidth<900)return;
+    var h=t.getBoundingClientRect().height,avail=window.innerHeight-118;
+    if(h<=avail)return;
+    t.style.zoom=Math.max(0.72,avail/h);
+  }
+  window.addEventListener('load',fit);
+  window.addEventListener('resize',fit);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);
+  setTimeout(fit,400);setTimeout(fit,1500);fit();
+})();
+</script>
+</body></html>

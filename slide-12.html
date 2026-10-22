@@ -1,0 +1,322 @@
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slide 11 — Test Like It Will Be Used a Thousand Times</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Fira+Code:wght@500&amp;display=swap" rel="stylesheet">
+<style>
+  .tw-slide {
+    --primary: #2563eb;
+    --primary-light: #60a5fa;
+    --glow: rgba(37, 99, 235, 0.15);
+    --bg: #ffffff;
+    --surface: #f8fafc;
+    --border: #e2e8f0;
+    --headline: #0f172a;
+    --body: #475569;
+    --muted: #94a3b8;
+    --warn: #d97706;
+    --warn-bg: #fffbeb;
+    --warn-border: #fcd34d;
+
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--body); line-height: 1.6; -webkit-font-smoothing: antialiased;
+    box-sizing: border-box; width: 100%; max-width: 1120px; min-height: 600px;
+    margin: 0 auto; padding: 56px 40px;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+  }
+  .tw-slide *, .tw-slide *::before, .tw-slide *::after { box-sizing: border-box; }
+
+  .tw-slide .tw-label {
+    font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--primary); margin: 0 0 12px; opacity: 0; animation: tw-fadeDown 0.8s ease 0.1s forwards;
+  }
+  .tw-slide .tw-headline {
+    font-size: 38px; font-weight: 900; letter-spacing: -0.03em; color: var(--headline);
+    line-height: 1.1; margin: 0 0 14px; opacity: 0; animation: tw-fadeDown 0.8s ease 0.25s forwards;
+  }
+  .tw-slide .tw-lead {
+    font-size: 17px; font-weight: 600; color: var(--headline); max-width: 720px; margin: 0 auto 8px;
+    opacity: 0; animation: tw-fadeDown 0.8s ease 0.38s forwards;
+  }
+  .tw-slide .tw-sub {
+    font-size: 14px; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; color: var(--muted);
+    margin: 0 auto 30px; opacity: 0; animation: tw-fadeDown 0.8s ease 0.48s forwards;
+  }
+
+  /* ── TABLE ── */
+  .tw-table { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: 12px; }
+  .tw-thead {
+    display: grid; grid-template-columns: 1.05fr 1.25fr 1.3fr; padding: 0 22px; gap: 18px;
+    opacity: 0; animation: tw-fadeDown 0.8s ease 0.55s forwards;
+  }
+  .tw-th { font-size: 11px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); text-align: left; }
+  .tw-th.fix { color: var(--primary); }
+
+  .tw-row {
+    display: grid; grid-template-columns: 1.05fr 1.25fr 1.3fr; gap: 18px; align-items: center;
+    background: var(--bg); border: 1px solid var(--border); border-radius: 16px; padding: 18px 22px;
+    cursor: pointer; outline: none; text-align: left; opacity: 0; transform: translateY(16px);
+    transition: transform 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.4s ease,
+                border-color 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
+  }
+  .tw-row.r1 { animation: tw-rise 0.55s ease 0.65s forwards; }
+  .tw-row.r2 { animation: tw-rise 0.55s ease 0.8s forwards; }
+  .tw-row.r3 { animation: tw-rise 0.55s ease 0.95s forwards; }
+
+  .tw-fail { display: flex; flex-direction: column; gap: 8px; }
+  .tw-fail-name { font-size: 17px; font-weight: 800; color: var(--headline); letter-spacing: -0.01em; }
+  .tw-badge {
+    align-self: flex-start; display: inline-flex; align-items: center; gap: 6px;
+    font-size: 10px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase;
+    color: var(--warn); background: var(--warn-bg); border: 1px solid var(--warn-border);
+    padding: 4px 10px; border-radius: 20px; transition: all 0.4s ease;
+  }
+  .tw-badge svg { width: 12px; height: 12px; stroke: var(--warn); }
+
+  .tw-symptom { font-size: 14.5px; color: var(--body); line-height: 1.4; }
+
+  .tw-fix { display: flex; align-items: flex-start; gap: 10px; }
+  .tw-fix .fix-icon { width: 26px; height: 26px; flex-shrink: 0; border-radius: 7px; background: var(--surface); display: flex; align-items: center; justify-content: center; transition: background 0.4s ease; }
+  .tw-fix .fix-icon svg { width: 15px; height: 15px; stroke: var(--primary); transition: stroke 0.4s ease; }
+  .tw-fix-text { font-size: 14.5px; font-weight: 600; color: var(--headline); line-height: 1.4; }
+
+  /* focus / defocus — fixes remain readable (dim floor 0.55, no blur on fix) */
+  .tw-table.engaged .tw-row:not(.active) { opacity: 0.55; }
+  .tw-row.active {
+    border-color: var(--warn); transform: translateY(-4px);
+    box-shadow: 0 16px 30px -14px rgba(217,119,6,0.28);
+  }
+  .tw-row.active .tw-fail-name { color: var(--warn); }
+  .tw-row.active .tw-badge { background: var(--warn); color: #fff; border-color: var(--warn); }
+  .tw-row.active .tw-badge svg { stroke: #fff; }
+  .tw-row.active .tw-fix .fix-icon { background: var(--primary); }
+  .tw-row.active .tw-fix .fix-icon svg { stroke: #fff; }
+  .tw-row.active .tw-fix-text { color: var(--primary); }
+  .tw-row.locked { box-shadow: 0 16px 30px -14px rgba(217,119,6,0.28), 0 0 0 2px var(--warn); }
+
+  /* ── FOOTER ── */
+  .tw-note {
+    margin-top: 34px; max-width: 820px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 18px 26px; text-align: left; font-size: 15px; color: var(--headline); line-height: 1.6;
+    display: flex; align-items: flex-start; gap: 12px;
+    opacity: 0; animation: tw-popIn 0.7s cubic-bezier(0.175,0.885,0.32,1.275) 1.15s forwards;
+  }
+  .tw-note svg { width: 19px; height: 19px; stroke: var(--primary); flex-shrink: 0; margin-top: 3px; }
+  .tw-q { font-family: 'Fira Code', ui-monospace, monospace; font-size: 13px; padding: 1px 6px; border-radius: 5px; }
+  .tw-q.bad { background: var(--warn-bg); color: var(--warn); }
+  .tw-q.good { background: #eff6ff; color: var(--primary); }
+
+  @keyframes tw-fadeDown { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes tw-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes tw-popIn { from { opacity: 0; transform: scale(0.92) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+  @media (max-width: 760px) {
+    .tw-slide { padding: 48px 16px; }
+    .tw-slide .tw-headline { font-size: 27px; }
+    .tw-thead { display: none; }
+    .tw-row, .tw-row.active { grid-template-columns: 1fr; gap: 10px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tw-slide *, .tw-slide *::before, .tw-slide *::after { animation: none !important; transition: none !important; }
+    .tw-slide [class^="tw-"], .tw-slide [class*=" tw-"] { opacity: 1 !important; transform: none !important; }
+  }
+
+
+
+
+
+
+/* ===== SLIDE NAV ===== */
+.slide-nav {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 9999;
+  font-family: 'Poppins', system-ui, sans-serif;
+}
+.slide-nav .nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #111;
+  color: #fff;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+}
+.slide-nav .nav-btn:hover {
+  background: #333;
+  transform: scale(1.06);
+}
+.slide-nav .nav-btn svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.slide-nav .nav-disabled {
+  opacity: 0.25;
+  pointer-events: none;
+}
+.slide-nav .nav-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #5f6368;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(10px);
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+</style>
+<style id="fit-css">
+/* ===== SCREEN FIT ===== */
+html{overflow-x:hidden}
+body{overflow-x:hidden}
+@media (min-width:900px) and (max-height:820px){
+  .tw-slide{padding-top:28px !important;padding-bottom:24px !important;min-height:0 !important}
+}
+</style>
+</head>
+<body>
+<div class="tw-slide">
+
+  <span class="tw-label">Building Claude Code Skills · 11</span>
+  <h1 class="tw-headline">Test Like It Will Be Used a Thousand Times</h1>
+  <p class="tw-lead">The danger is overfitting: a skill that works beautifully on your three examples and nowhere else.</p>
+  <p class="tw-sub">When you test, watch for two failure modes:</p>
+
+  <div class="tw-table engaged" id="table">
+    <div class="tw-thead">
+      <div class="tw-th">Failure</div>
+      <div class="tw-th">What it looks like</div>
+      <div class="tw-th fix">The fix</div>
+    </div>
+
+    <div class="tw-row r1" tabindex="0" aria-label="Under-triggering: skill doesn't fire when it should. Fix: sharpen and broaden the description.">
+      <div class="tw-fail">
+        <span class="tw-fail-name">Under-triggering</span>
+        <span class="tw-badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>Failure mode</span>
+      </div>
+      <div class="tw-symptom">Skill doesn't fire when it should</div>
+      <div class="tw-fix">
+        <span class="fix-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+        <span class="tw-fix-text">Sharpen and broaden the description</span>
+      </div>
+    </div>
+
+    <div class="tw-row r2" tabindex="0" aria-label="Over-triggering: skill fires on tasks it shouldn't. Fix: tighten the scope and the description.">
+      <div class="tw-fail">
+        <span class="tw-fail-name">Over-triggering</span>
+        <span class="tw-badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>Failure mode</span>
+      </div>
+      <div class="tw-symptom">Skill fires on tasks it shouldn't</div>
+      <div class="tw-fix">
+        <span class="fix-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+        <span class="tw-fix-text">Tighten the scope and the description</span>
+      </div>
+    </div>
+
+    <div class="tw-row r3 active" tabindex="0" aria-label="Overfitting: works on your examples, fails on new ones. Fix: generalise the instructions, remove brittle specifics.">
+      <div class="tw-fail">
+        <span class="tw-fail-name">Overfitting</span>
+        <span class="tw-badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>Failure mode</span>
+      </div>
+      <div class="tw-symptom">Works on your examples, fails on new ones</div>
+      <div class="tw-fix">
+        <span class="fix-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+        <span class="tw-fix-text">Generalise the instructions, remove brittle specifics</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tw-note">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    <span>Use realistic, detailed test prompts. <span class="tw-q bad">"Format this"</span> tests nothing. <span class="tw-q good">"My boss sent a messy Q4 xlsx and wants a margin column"</span> tests the real path.</span>
+  </div>
+
+</div>
+
+<script>
+  (function () {
+    var table = document.getElementById('table');
+    var rows = Array.prototype.slice.call(table.querySelectorAll('.tw-row'));
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var idx = 0, autoTimer = null, idleTimer = null, locked = false;
+
+    function focusRow(i) {
+      rows.forEach(function (r, k) { r.classList.toggle('active', k === i); });
+      table.classList.add('engaged'); idx = i;
+    }
+    function clearFocus() {
+      if (locked) return;
+      rows.forEach(function (r) { r.classList.remove('active'); });
+      table.classList.remove('engaged');
+    }
+    function startAuto() {
+      if (reduced || locked || autoTimer) return;
+      autoTimer = setInterval(function () { if (!locked) focusRow((idx + 1) % rows.length); }, 3000);
+    }
+    function stopAuto() { clearInterval(autoTimer); autoTimer = null; }
+    function pauseThenResume() { stopAuto(); clearTimeout(idleTimer); idleTimer = setTimeout(function () { if (!locked) startAuto(); }, 5000); }
+    function toggleLock(i) {
+      if (locked && idx === i) { locked = false; rows[i].classList.remove('locked'); clearFocus(); startAuto(); }
+      else { locked = true; stopAuto(); rows.forEach(function (r) { r.classList.remove('locked'); }); focusRow(i); rows[i].classList.add('locked'); }
+    }
+
+    rows.forEach(function (row, i) {
+      row.addEventListener('mouseenter', function () { stopAuto(); clearTimeout(idleTimer); if (!locked) focusRow(i); });
+      row.addEventListener('focus', function () { stopAuto(); clearTimeout(idleTimer); if (!locked) focusRow(i); });
+      row.addEventListener('mouseleave', function () { if (!locked) { clearFocus(); pauseThenResume(); } });
+      row.addEventListener('blur', function () { if (!locked) { clearFocus(); pauseThenResume(); } });
+      row.addEventListener('click', function () { toggleLock(i); });
+      row.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleLock(i); } });
+    });
+
+    setTimeout(startAuto, reduced ? 0 : 2200);
+  })();
+</script>
+
+
+
+
+<div class="fit-spacer" style="height:96px" aria-hidden="true"></div>
+<div class="slide-nav">
+  <a href="slide-11.html" class="nav-btn" title="Previous"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg></a>
+  <span class="nav-label">12 / 18</span>
+  <a href="slide-13.html" class="nav-btn" title="Next"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></a>
+</div>
+
+<script id="fit-js">
+(function(){
+  var t=null,kids=document.body.children;
+  for(var i=0;i<kids.length;i++){var k=kids[i];
+    if(/^(SCRIPT|STYLE|LINK|NOSCRIPT)$/.test(k.tagName)||k.classList.contains('slide-nav')||k.classList.contains('fit-spacer'))continue;
+    t=k;break;}
+  if(!t)return;
+  function fit(){
+    t.style.zoom=1;
+    if(window.innerWidth<900)return;
+    var h=t.getBoundingClientRect().height,avail=window.innerHeight-118;
+    if(h<=avail)return;
+    t.style.zoom=Math.max(0.72,avail/h);
+  }
+  window.addEventListener('load',fit);
+  window.addEventListener('resize',fit);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);
+  setTimeout(fit,400);setTimeout(fit,1500);fit();
+})();
+</script>
+</body></html>

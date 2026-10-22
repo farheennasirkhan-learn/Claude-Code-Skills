@@ -1,0 +1,412 @@
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#fff}
+.a2b11-outer{background:#f8fafc;width:100%}
+.a2b11-wrap{max-width:860px;margin:0 auto;padding:48px 40px}
+.a2b11-tag{font-family:'Poppins',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#317eff;margin-bottom:8px}
+.a2b11-title{font-family:'Poppins',sans-serif;font-size:22px;font-weight:700;color:#0f172a;margin-bottom:6px}
+.a2b11-scenario{font-family:'Poppins',sans-serif;font-size:15px;color:#475569;line-height:1.6;margin-bottom:28px;padding:14px 18px;background:#eff6ff;border-left:4px solid #317eff;border-radius:0 8px 8px 0}
+.a2b11-scenario strong{color:#0f172a}
+
+/* ── RAIL ── */
+.a2b11-rail{display:flex;align-items:center;gap:0;margin-bottom:24px;overflow-x:auto;padding-bottom:4px}
+.a2b11-node{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;flex-shrink:0}
+.a2b11-node-circle{width:44px;height:44px;border-radius:50%;border:2px solid #e2e8f0;background:#fff;display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;color:#94a3b8;transition:all 0.25s ease}
+.a2b11-node.active .a2b11-node-circle{background:#317eff;border-color:#317eff;color:#fff;box-shadow:0 0 0 4px rgba(49,126,255,0.15)}
+.a2b11-node.done .a2b11-node-circle{background:#22c55e;border-color:#22c55e;color:#fff}
+.a2b11-node-label{font-family:'Poppins',sans-serif;font-size:11px;font-weight:600;color:#94a3b8;white-space:nowrap;text-align:center;max-width:80px;line-height:1.3}
+.a2b11-node.active .a2b11-node-label{color:#317eff}
+.a2b11-node.done .a2b11-node-label{color:#22c55e}
+.a2b11-connector{flex:1;height:2px;background:#e2e8f0;min-width:20px;transition:background 0.3s}
+.a2b11-connector.done{background:#22c55e}
+
+/* ── CONTENT PANEL ── */
+.a2b11-content{background:#fff;border-radius:16px;padding:28px;border:2px solid #e2e8f0;min-height:240px}
+
+/* shared step header */
+.a2b11-step-head{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.a2b11-step-icon{width:52px;height:52px;background:#317eff;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.a2b11-step-icon .material-icons{font-size:26px;color:#fff}
+.a2b11-step-num{font-family:'Poppins',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#317eff;margin-bottom:2px}
+.a2b11-step-title{font-family:'Poppins',sans-serif;font-size:18px;font-weight:700;color:#0f172a}
+
+/* ── STEP 1 — Claude Code Interface ── */
+.s1-browser{background:#1a1f2e;border-radius:12px;overflow:hidden;box-shadow:0 6px 32px rgba(0,0,0,0.25);margin-top:4px}
+.s1-chrome{background:#111827;padding:9px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.s1-chrome-dots{display:flex;gap:5px}
+.s1-chrome-dot{width:11px;height:11px;border-radius:50%}
+.s1-chrome-dot:nth-child(1){background:#ff5f57}
+.s1-chrome-dot:nth-child(2){background:#febc2e}
+.s1-chrome-dot:nth-child(3){background:#28c840}
+.s1-chrome-url{flex:1;background:#1e2436;border-radius:5px;padding:4px 10px;display:flex;align-items:center;gap:5px;font-family:'Poppins',sans-serif;font-size:11px;color:#94a3b8}
+.s1-chrome-url .material-icons{font-size:12px;color:#22c55e}
+.s1-app{display:flex;min-height:280px}
+.s1-sidebar{width:160px;flex-shrink:0;background:#111827;border-right:1px solid rgba(255,255,255,0.06);padding:12px 10px;display:flex;flex-direction:column;gap:3px}
+.s1-sidebar-logo{font-family:'Poppins',sans-serif;font-size:12px;font-weight:700;color:#fff;padding:6px 6px 12px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.s1-sidebar-logo .material-icons{font-size:15px;color:#317eff}
+.s1-sidebar-item{font-family:'Poppins',sans-serif;font-size:11px;color:rgba(255,255,255,0.4);padding:6px 7px;border-radius:5px;display:flex;align-items:center;gap:6px}
+.s1-sidebar-item .material-icons{font-size:13px}
+.s1-sidebar-item.active{background:rgba(49,126,255,0.15);color:rgba(255,255,255,0.9)}
+.s1-sidebar-item.active .material-icons{color:#317eff}
+.s1-sidebar-new{margin-top:auto;background:rgba(49,126,255,0.2);border:1px solid rgba(49,126,255,0.3);border-radius:7px;padding:7px 8px;font-family:'Poppins',sans-serif;font-size:11px;font-weight:600;color:#317eff;display:flex;align-items:center;gap:5px}
+.s1-sidebar-new .material-icons{font-size:13px}
+.s1-main{flex:1;display:flex;flex-direction:column;background:#1a1f2e}
+.s1-topbar{padding:10px 16px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between}
+.s1-topbar-title{font-family:'Poppins',sans-serif;font-size:12px;font-weight:600;color:rgba(255,255,255,0.6)}
+.s1-topbar-chips{display:flex;gap:6px}
+.s1-chip{font-family:'Poppins',sans-serif;font-size:10px;color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.06);border-radius:100px;padding:3px 8px;display:flex;align-items:center;gap:3px}
+.s1-chip .material-icons{font-size:11px}
+.s1-messages{flex:1;padding:16px;display:flex;flex-direction:column;gap:12px}
+.s1-user-msg{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.s1-user-avatar-row{display:flex;align-items:center;gap:6px;font-family:'Poppins',sans-serif;font-size:10px;color:rgba(255,255,255,0.3)}
+.s1-user-avatar{width:20px;height:20px;border-radius:50%;background:#317eff;display:flex;align-items:center;justify-content:center}
+.s1-user-avatar .material-icons{font-size:11px;color:#fff}
+.s1-user-bubble{background:#317eff;border-radius:10px 3px 10px 10px;padding:12px 14px;max-width:92%;font-family:'Poppins',sans-serif;font-size:12px;color:#fff;line-height:1.65}
+.s1-gcrf-key{font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.6);display:block;margin-top:8px;margin-bottom:1px}
+.s1-gcrf-key:first-child{margin-top:0}
+.s1-gcrf-val{font-size:12px;font-style:italic;color:rgba(255,255,255,0.92);display:block}
+.s1-claude-msg{display:flex;gap:8px;align-items:flex-start}
+.s1-claude-avatar{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#317eff,#7c3aed);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.s1-claude-avatar .material-icons{font-size:13px;color:#fff}
+.s1-claude-bubble{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:3px 10px 10px 10px;padding:10px 14px}
+.s1-typing{display:flex;gap:4px;align-items:center}
+.s1-typing span{width:6px;height:6px;border-radius:50%;background:#317eff;animation:s1dot 1.2s ease-in-out infinite}
+.s1-typing span:nth-child(2){animation-delay:0.2s}
+.s1-typing span:nth-child(3){animation-delay:0.4s}
+@keyframes s1dot{0%,80%,100%{transform:scale(0.6);opacity:0.4}40%{transform:scale(1);opacity:1}}
+.s1-inputbar{padding:10px 14px;border-top:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:8px}
+.s1-input-box{flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:7px 12px;font-family:'Poppins',sans-serif;font-size:11px;color:rgba(255,255,255,0.3);font-style:italic}
+.s1-input-send{width:28px;height:28px;border-radius:7px;background:#317eff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.s1-input-send .material-icons{font-size:14px;color:#fff}
+
+/* ── STEP 2 — Checklist ── */
+.s2-intro{font-family:'Poppins',sans-serif;font-size:15px;color:#475569;line-height:1.65;margin-bottom:16px}
+.s2-list{display:flex;flex-direction:column;gap:9px;margin-bottom:18px}
+.s2-item{display:flex;align-items:center;gap:14px;padding:14px 18px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:100px;cursor:pointer;opacity:0;transform:translateX(-12px);transition:opacity 0.4s ease,transform 0.4s ease,border-color 0.25s,background 0.25s,box-shadow 0.25s}
+.s2-item.vis{opacity:1;transform:translateX(0)}
+.s2-item:hover{border-color:#22c55e;background:#f0fdf4;box-shadow:0 0 0 4px rgba(34,197,94,0.1),0 4px 14px rgba(34,197,94,0.12);transform:translateX(5px) scale(1.01)}
+.s2-check{width:26px;height:26px;border-radius:50%;border:2px solid #cbd5e1;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.25s,border-color 0.25s,box-shadow 0.25s,transform 0.25s}
+.s2-check .material-icons{font-size:15px;color:#fff;opacity:0;transform:scale(0.5);transition:opacity 0.2s,transform 0.2s}
+.s2-item:hover .s2-check{background:#22c55e;border-color:#22c55e;box-shadow:0 0 0 4px rgba(34,197,94,0.18);transform:scale(1.1)}
+.s2-item:hover .s2-check .material-icons{opacity:1;transform:scale(1)}
+.s2-item:hover .s2-text{color:#15803d;font-weight:500}
+.s2-item.checked{border-color:#22c55e;background:#f0fdf4}
+.s2-item.checked .s2-check{background:#22c55e;border-color:#22c55e}
+.s2-item.checked .s2-check .material-icons{opacity:1;transform:scale(1)}
+.s2-item.checked .s2-text{color:#15803d;font-weight:500}
+.s2-text{font-family:'Poppins',sans-serif;font-size:14px;color:#334155;flex:1;transition:color 0.25s}
+.s2-callout{background:#fff8ed;border:1px solid #fde68a;border-radius:11px;padding:14px 18px;display:flex;gap:12px;align-items:flex-start;animation:s2glow 3s ease-in-out infinite}
+@keyframes s2glow{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,0);border-color:#fde68a}50%{box-shadow:0 0 0 4px rgba(245,158,11,0.12),0 0 14px rgba(245,158,11,0.15);border-color:#f59e0b}}
+.s2-callout-icon .material-icons{font-size:24px;color:#f59e0b}
+.s2-callout-text{font-family:'Poppins',sans-serif;font-size:14px;color:#78350f;line-height:1.6}
+.s2-callout-text strong{font-weight:700}
+
+/* ── STEP 3 — Typewriter chat rows ── */
+.s3-intro{font-family:'Poppins',sans-serif;font-size:15px;color:#475569;line-height:1.65;margin-bottom:16px}
+.s3-questions{display:flex;flex-direction:column;gap:11px;margin-bottom:18px}
+.s3-q{display:flex;align-items:center;gap:12px;padding:14px 18px;background:#fff;border:2px solid #e2e8f0;border-radius:100px;cursor:default;opacity:0}
+.s3-q:nth-child(1){animation:s3in 0.5s 0.2s ease forwards,s3glow1 2.6s 1s ease-in-out infinite}
+.s3-q:nth-child(2){animation:s3in 0.5s 0.45s ease forwards,s3glow2 2.6s 1.6s ease-in-out infinite}
+@keyframes s3in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes s3glow1{0%,100%{border-color:#e2e8f0;box-shadow:0 0 0 0 rgba(49,126,255,0)}50%{border-color:rgba(49,126,255,0.55);box-shadow:0 0 0 5px rgba(49,126,255,0.1),0 0 16px rgba(49,126,255,0.14)}}
+@keyframes s3glow2{0%,100%{border-color:#e2e8f0;box-shadow:0 0 0 0 rgba(99,102,241,0)}50%{border-color:rgba(99,102,241,0.5);box-shadow:0 0 0 5px rgba(99,102,241,0.09),0 0 16px rgba(99,102,241,0.12)}}
+.s3-q-icon{width:30px;height:30px;border-radius:50%;background:#eff6ff;border:1.5px solid #bfdbfe;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.s3-q-icon .material-icons{font-size:15px;color:#317eff}
+.s3-q-text{font-family:'Poppins',sans-serif;font-size:14px;font-style:italic;color:#334155;flex:1;min-height:18px}
+.s3-cursor{display:inline-block;width:2px;height:13px;background:#317eff;margin-left:1px;vertical-align:middle;animation:s3blink 0.75s infinite}
+@keyframes s3blink{0%,100%{opacity:1}50%{opacity:0}}
+.s3-footer{font-family:'Poppins',sans-serif;font-size:14px;color:#475569;line-height:1.65;padding:14px 18px;background:#f8fafc;border-radius:10px;border-left:4px solid #317eff}
+.s3-footer strong{color:#0f172a}
+
+/* ── STEPS 4 & 5 — shared ── */
+.a2b11-step-body{font-family:'Poppins',sans-serif;font-size:15px;color:#475569;line-height:1.7}
+.a2b11-step-body strong{color:#0f172a;font-weight:600}
+.a2b11-plan-items{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.a2b11-plan-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:#f8fafc;border-radius:8px;font-family:'Poppins',sans-serif;font-size:14px;color:#334155}
+.a2b11-plan-item .material-icons{font-size:18px;color:#317eff;flex-shrink:0;margin-top:1px}
+.a2b11-feedback{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.a2b11-fb-row{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:10px}
+.a2b11-fb-row.good{background:#f0fdf4;border:1px solid #bbf7d0}
+.a2b11-fb-row.fix{background:#fff5f5;border:1px solid #fecaca}
+.a2b11-fb-row .material-icons{font-size:20px;flex-shrink:0}
+.a2b11-fb-row.good .material-icons{color:#22c55e}
+.a2b11-fb-row.fix .material-icons{color:#ef4444}
+.a2b11-fb-text{font-family:'Poppins',sans-serif;font-size:14px;line-height:1.55}
+.a2b11-fb-row.good .a2b11-fb-text{color:#15803d}
+.a2b11-fb-row.fix .a2b11-fb-text{color:#dc2626}
+.a2b11-fb-row.fix .a2b11-fb-text span{font-style:italic}
+
+/* ── NAV ── */
+.a2b11-nav{display:flex;justify-content:space-between;margin-top:20px}
+.a2b11-btn{display:flex;align-items:center;gap:6px;font-family:'Poppins',sans-serif;font-size:13px;font-weight:600;padding:10px 20px;border-radius:100px;border:none;cursor:pointer;transition:all 0.2s}
+.a2b11-btn-prev{background:#f1f5f9;color:#475569}
+.a2b11-btn-prev:hover{background:#e2e8f0}
+.a2b11-btn-prev:disabled{opacity:0.3;cursor:not-allowed}
+.a2b11-btn-next{background:#317eff;color:#fff}
+.a2b11-btn-next:hover{background:#1d4ed8}
+.a2b11-btn-next:disabled{opacity:0.3;cursor:not-allowed}
+.a2b11-btn .material-icons{font-size:18px}
+
+
+
+
+
+
+/* ===== SLIDE NAV ===== */
+.slide-nav {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 9999;
+  font-family: 'Poppins', system-ui, sans-serif;
+}
+.slide-nav .nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #111;
+  color: #fff;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+}
+.slide-nav .nav-btn:hover {
+  background: #333;
+  transform: scale(1.06);
+}
+.slide-nav .nav-btn svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.slide-nav .nav-disabled {
+  opacity: 0.25;
+  pointer-events: none;
+}
+.slide-nav .nav-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #5f6368;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(10px);
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+</style></head><body>
+
+<div class="a2b11-outer">
+  <div class="a2b11-wrap">
+    <div class="a2b11-tag">Step-by-Step: What Happens in a Session</div>
+    <div class="a2b11-title">A Complete Interaction from Start to Finish</div>
+    <div class="a2b11-scenario">The scenario: you're an <strong>Operations Manager</strong> who wants a script to automatically sort and rename files in a shared folder.</div>
+
+    <div class="a2b11-rail" id="a2b11rail">
+      <div class="a2b11-node active" data-step="0"><div class="a2b11-node-circle">1</div><div class="a2b11-node-label">Write message</div></div>
+      <div class="a2b11-connector" id="con0"></div>
+      <div class="a2b11-node" data-step="1"><div class="a2b11-node-circle">2</div><div class="a2b11-node-label">See the plan</div></div>
+      <div class="a2b11-connector" id="con1"></div>
+      <div class="a2b11-node" data-step="2"><div class="a2b11-node-circle">3</div><div class="a2b11-node-label">Review &amp; approve</div></div>
+      <div class="a2b11-connector" id="con2"></div>
+      <div class="a2b11-node" data-step="3"><div class="a2b11-node-circle">4</div><div class="a2b11-node-label">Executes</div></div>
+      <div class="a2b11-connector" id="con3"></div>
+      <div class="a2b11-node" data-step="4"><div class="a2b11-node-circle">5</div><div class="a2b11-node-label">You decide next</div></div>
+    </div>
+
+    <div class="a2b11-content" id="a2b11content"><div class="a2b11-step-head"><div class="a2b11-step-icon"><span class="material-icons">edit</span></div><div><div class="a2b11-step-num">Step 1 of 5</div><div class="a2b11-step-title">You Write Your First Message</div></div></div><div class="s1-browser"><div class="s1-chrome"><div class="s1-chrome-dots"><div class="s1-chrome-dot"></div><div class="s1-chrome-dot"></div><div class="s1-chrome-dot"></div></div><div class="s1-chrome-url"><span class="material-icons">lock</span>claude.ai/code</div></div><div class="s1-app"><div class="s1-sidebar"><div class="s1-sidebar-logo"><span class="material-icons">smart_toy</span>Claude Code</div><div class="s1-sidebar-item active"><span class="material-icons">chat</span>Invoice Archive</div><div class="s1-sidebar-item"><span class="material-icons">history</span>Past sessions</div><div class="s1-sidebar-item"><span class="material-icons">settings</span>Settings</div><div class="s1-sidebar-new"><span class="material-icons">add</span>New session</div></div><div class="s1-main"><div class="s1-topbar"><div class="s1-topbar-title">Invoice Archive — File Organiser</div><div class="s1-topbar-chips"><div class="s1-chip"><span class="material-icons">folder</span>Connected</div><div class="s1-chip"><span class="material-icons">shield</span>Safe mode on</div></div></div><div class="s1-messages"><div class="s1-user-msg"><div class="s1-user-avatar-row"><div class="s1-user-avatar"><span class="material-icons">person</span></div>You</div><div class="s1-user-bubble"><span class="s1-gcrf-key">Goal:</span><span class="s1-gcrf-val">I need a script that organizes files in our shared 'Invoice Archive' folder.</span><span class="s1-gcrf-key">Context:</span><span class="s1-gcrf-val">The folder has hundreds of PDF files named randomly (like 'DOC_3847.pdf', 'scan001.pdf'). Each file has the vendor name and invoice date on page 1.</span><span class="s1-gcrf-key">Rules:</span><span class="s1-gcrf-val">Rename each file to the format 'YYYY-MM-DD_VendorName.pdf'. Create subfolders by year. Don't delete any original files — just rename and move.</span><span class="s1-gcrf-key">Feedback:</span><span class="s1-gcrf-val">Run it on 5 test files first and show me the result before processing everything.</span></div></div><div class="s1-claude-msg"><div class="s1-claude-avatar"><span class="material-icons">smart_toy</span></div><div class="s1-claude-bubble"><div class="s1-typing"><span></span><span></span><span></span></div></div></div></div><div class="s1-inputbar"><div class="s1-input-box">Type a message or describe a task...</div><div class="s1-input-send"><span class="material-icons">send</span></div></div></div></div></div></div>
+
+    <div class="a2b11-nav">
+      <button class="a2b11-btn a2b11-btn-prev" id="a2b11prev" disabled=""><span class="material-icons">chevron_left</span>Previous</button>
+      <button class="a2b11-btn a2b11-btn-next" id="a2b11next">Next<span class="material-icons">chevron_right</span></button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+
+  var current = 0;
+  var typeTimers = [];
+
+  function clearTypeTimers(){
+    typeTimers.forEach(function(t){ clearInterval(t); });
+    typeTimers = [];
+  }
+
+  /* ── STEP RENDERERS ── */
+
+  function renderStep1(){
+    return '<div class="a2b11-step-head"><div class="a2b11-step-icon"><span class="material-icons">edit</span></div><div><div class="a2b11-step-num">Step 1 of 5</div><div class="a2b11-step-title">You Write Your First Message</div></div></div>'
+      + '<div class="s1-browser">'
+        + '<div class="s1-chrome"><div class="s1-chrome-dots"><div class="s1-chrome-dot"></div><div class="s1-chrome-dot"></div><div class="s1-chrome-dot"></div></div><div class="s1-chrome-url"><span class="material-icons">lock</span>claude.ai/code</div></div>'
+        + '<div class="s1-app">'
+          + '<div class="s1-sidebar"><div class="s1-sidebar-logo"><span class="material-icons">smart_toy</span>Claude Code</div><div class="s1-sidebar-item active"><span class="material-icons">chat</span>Invoice Archive</div><div class="s1-sidebar-item"><span class="material-icons">history</span>Past sessions</div><div class="s1-sidebar-item"><span class="material-icons">settings</span>Settings</div><div class="s1-sidebar-new"><span class="material-icons">add</span>New session</div></div>'
+          + '<div class="s1-main">'
+            + '<div class="s1-topbar"><div class="s1-topbar-title">Invoice Archive — File Organiser</div><div class="s1-topbar-chips"><div class="s1-chip"><span class="material-icons">folder</span>Connected</div><div class="s1-chip"><span class="material-icons">shield</span>Safe mode on</div></div></div>'
+            + '<div class="s1-messages">'
+              + '<div class="s1-user-msg"><div class="s1-user-avatar-row"><div class="s1-user-avatar"><span class="material-icons">person</span></div>You</div>'
+              + '<div class="s1-user-bubble"><span class="s1-gcrf-key">Goal:</span><span class="s1-gcrf-val">I need a script that organizes files in our shared \'Invoice Archive\' folder.</span><span class="s1-gcrf-key">Context:</span><span class="s1-gcrf-val">The folder has hundreds of PDF files named randomly (like \'DOC_3847.pdf\', \'scan001.pdf\'). Each file has the vendor name and invoice date on page 1.</span><span class="s1-gcrf-key">Rules:</span><span class="s1-gcrf-val">Rename each file to the format \'YYYY-MM-DD_VendorName.pdf\'. Create subfolders by year. Don\'t delete any original files — just rename and move.</span><span class="s1-gcrf-key">Feedback:</span><span class="s1-gcrf-val">Run it on 5 test files first and show me the result before processing everything.</span></div></div>'
+              + '<div class="s1-claude-msg"><div class="s1-claude-avatar"><span class="material-icons">smart_toy</span></div><div class="s1-claude-bubble"><div class="s1-typing"><span></span><span></span><span></span></div></div></div>'
+            + '</div>'
+            + '<div class="s1-inputbar"><div class="s1-input-box">Type a message or describe a task...</div><div class="s1-input-send"><span class="material-icons">send</span></div></div>'
+          + '</div>'
+        + '</div>'
+      + '</div>';
+  }
+
+  function renderStep2(){
+    var items = [
+      'I\'ll read each PDF, extract the date and vendor name from page 1',
+      'Rename the file using the format you specified',
+      'Create year-based subfolders if they don\'t exist',
+      'Run on 5 test files first and show you the result',
+      'Wait for your approval before processing the full folder'
+    ];
+    var rows = items.map(function(t){
+      return '<div class="s2-item" onclick="this.classList.toggle(\'checked\')">'
+        + '<div class="s2-check"><span class="material-icons">check</span></div>'
+        + '<div class="s2-text">'+t+'</div>'
+        + '</div>';
+    }).join('');
+    return '<div class="a2b11-step-head"><div class="a2b11-step-icon"><span class="material-icons">list_alt</span></div><div><div class="a2b11-step-num">Step 2 of 5</div><div class="a2b11-step-title">Claude Code Presents a Plan</div></div></div>'
+      + '<div class="s2-intro">Before writing a single line of code, Claude Code shows you its plan:</div>'
+      + '<div class="s2-list" id="s2list">'+rows+'</div>'
+      + '<div class="s2-callout"><div class="s2-callout-icon"><span class="material-icons">shield</span></div><div class="s2-callout-text"><strong>You always see the plan before anything happens.</strong> You can ask for changes before a single file is touched. This is one of the most important safety features of Claude Code.</div></div>';
+  }
+
+  function renderStep3(){
+    return '<div class="a2b11-step-head"><div class="a2b11-step-icon"><span class="material-icons">rate_review</span></div><div><div class="a2b11-step-num">Step 3 of 5</div><div class="a2b11-step-title">You Review and Approve</div></div></div>'
+      + '<div class="s3-intro">Read the plan. Ask questions if anything is unclear. You might say:</div>'
+      + '<div class="s3-questions">'
+        + '<div class="s3-q"><div class="s3-q-icon"><span class="material-icons">chat_bubble_outline</span></div><div class="s3-q-text"><span id="s3t1"></span><span class="s3-cursor" id="s3c1"></span></div></div>'
+        + '<div class="s3-q"><div class="s3-q-icon"><span class="material-icons">chat_bubble_outline</span></div><div class="s3-q-text"><span id="s3t2"></span><span class="s3-cursor" id="s3c2" style="opacity:0"></span></div></div>'
+      + '</div>'
+      + '<div class="s3-footer">Claude Code will answer and update the plan. When you\'re <strong>satisfied, you approve.</strong></div>';
+  }
+
+  function renderStep4(){
+    return '<div class="a2b11-step-head"><div class="a2b11-step-icon"><span class="material-icons">play_arrow</span></div><div><div class="a2b11-step-num">Step 4 of 5</div><div class="a2b11-step-title">Claude Code Executes</div></div></div>'
+      + '<div class="a2b11-step-body">It runs on the 5 test files and shows you exactly what changed — the old filename and new filename for each. You verify the output looks right.</div>'
+      + '<div class="a2b11-plan-items" style="margin-top:14px">'
+        + '<div class="a2b11-plan-item"><span class="material-icons">check</span>DOC_3847.pdf → 2024-03-15_Acme_Corp.pdf</div>'
+        + '<div class="a2b11-plan-item"><span class="material-icons">check</span>scan001.pdf → 2024-02-08_TechSupply_Ltd.pdf</div>'
+        + '<div class="a2b11-plan-item"><span class="material-icons">check</span>invoice_x.pdf → 2024-04-01_Global_Vendors.pdf</div>'
+        + '<div class="a2b11-plan-item" style="color:#94a3b8;font-style:italic"><span class="material-icons" style="color:#94a3b8">more_horiz</span>+ 2 more files processed</div>'
+      + '</div>';
+  }
+
+  function renderStep5(){
+    return '<div class="a2b11-step-head"><div class="a2b11-step-icon"><span class="material-icons">fork_right</span></div><div><div class="a2b11-step-num">Step 5 of 5</div><div class="a2b11-step-title">You Decide What Happens Next</div></div></div>'
+      + '<div class="a2b11-step-body">You stay in control throughout. Two paths:</div>'
+      + '<div class="a2b11-feedback">'
+        + '<div class="a2b11-fb-row good"><span class="material-icons">check_circle</span><div class="a2b11-fb-text"><strong>If the test looks good:</strong><br>"Great, run it on everything."</div></div>'
+        + '<div class="a2b11-fb-row fix"><span class="material-icons">edit</span><div class="a2b11-fb-text"><strong>If something\'s off:</strong><br><span>"The date format is wrong — it should be DD-MM-YYYY not YYYY-MM-DD. Fix that and re-run the test."</span><br>Claude Code corrects and tries again.</div></div>'
+      + '</div>';
+  }
+
+  /* ── POST-RENDER HOOKS ── */
+
+  function afterRender(idx){
+    clearTypeTimers();
+
+    if(idx === 1){
+      // Step 2 — stagger checklist entrance
+      var items = document.querySelectorAll('#s2list .s2-item');
+      items.forEach(function(it, i){
+        setTimeout(function(){ it.classList.add('vis'); }, 100 + i * 100);
+      });
+    }
+
+    if(idx === 2){
+      // Step 3 — auto typewriter, row1 then row2
+      var t1 = document.getElementById('s3t1');
+      var c1 = document.getElementById('s3c1');
+      var t2 = document.getElementById('s3t2');
+      var c2 = document.getElementById('s3c2');
+      var text1 = '"What happens if two vendors have the same name?"';
+      var text2 = '"Can you also generate a log file listing what was renamed?"';
+
+      function typeRow(el, cur, text, onDone){
+        cur.style.opacity = '1';
+        el.textContent = '';
+        var i = 0;
+        var tim = setInterval(function(){
+          if(i <= text.length){ el.textContent = text.slice(0, i); i++; }
+          else { clearInterval(tim); if(onDone) onDone(); }
+        }, 42);
+        typeTimers.push(tim);
+      }
+
+      var t = setTimeout(function(){
+        typeRow(t1, c1, text1, function(){
+          var t2timer = setTimeout(function(){
+            typeRow(t2, c2, text2, null);
+          }, 400);
+          typeTimers.push(t2timer);
+        });
+      }, 500);
+      typeTimers.push(t);
+    }
+  }
+
+  /* ── RENDER + RAIL ── */
+
+  var renderers = [renderStep1, renderStep2, renderStep3, renderStep4, renderStep5];
+
+  function render(){
+    var html = renderers[current]();
+    document.getElementById('a2b11content').innerHTML = html;
+    afterRender(current);
+
+    var nodes = document.querySelectorAll('#a2b11rail .a2b11-node');
+    nodes.forEach(function(n, i){
+      n.classList.remove('active','done');
+      if(i < current) n.classList.add('done');
+      if(i === current) n.classList.add('active');
+    });
+    for(var i = 0; i < 4; i++){
+      var con = document.getElementById('con'+i);
+      if(con) con.classList.toggle('done', i < current);
+    }
+    document.getElementById('a2b11prev').disabled = (current === 0);
+    document.getElementById('a2b11next').disabled = (current === renderers.length - 1);
+  }
+
+  document.getElementById('a2b11prev').addEventListener('click', function(){
+    if(current > 0){ current--; render(); }
+  });
+  document.getElementById('a2b11next').addEventListener('click', function(){
+    if(current < renderers.length - 1){ current++; render(); }
+  });
+  document.querySelectorAll('#a2b11rail .a2b11-node').forEach(function(n, i){
+    n.addEventListener('click', function(){ current = i; render(); });
+  });
+
+  render();
+})();
+</script>
+
+
+<div class="slide-nav">
+  <a href="slide-18.html" class="nav-btn" title="Previous"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg></a>
+  <span class="nav-label">18 / 18</span>
+  <span class="nav-btn nav-disabled"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></span>
+</div>
+
+</body></html>
